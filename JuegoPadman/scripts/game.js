@@ -1,4 +1,4 @@
-import { tablero } from './render.js';
+import { matriz } from './render.js';
 import { enemigos } from './enemy.js';
 import { player } from './player.js';
 const div = document.querySelector(`#contenedor`);
@@ -18,33 +18,46 @@ const explicacion = `<div>
 
 div.innerHTML = explicacion;
 
-console.log(tablero);
 
-function recorrerTablero() {
-    for (let i = 0; i < tablero.length; i++) {
-        for (let j = 0; j < tablero[i].length; j++) {
-            console.log(`Elemento en la posición [${i}][${j}]: ${tablero[i][j]}`);
+
+//funcion para recorrer el tablero y mostrar los elementos en la consola
+function recorrerMatriz() {
+    for (let i = 0; i < matriz.length; i++) {
+        for (let j = 0; j < matriz[i].length; j++) {
+            console.log(`Elemento en la posición [${i}][${j}]: ${matriz[i][j]}`);
         }
     }
 }
 
-function dibujarTablero() {
-
-    let tableroHTML = `<div class="tablero">`;
-
-    for (let i = 0; i < tablero.length; i++) {
-
-        tableroHTML += `<div class="fila">`;
-
-        for (let j = 0; j < tablero[i].length; j++) {
-            tableroHTML += `<div class="celda"></div>`;
-        }
-
-        tableroHTML += `</div>`;
+//colocar enemigos en la matriz
+enemigos.forEach(enemigo => {
+    if(enemigo.vivo) {
+        matriz[enemigo.f][enemigo.c] = 1;
     }
+});
 
-    tableroHTML += `</div>`;
+//colocar jugador en la matriz
 
+if(player.vivo) {
+    matriz[player.f][player.c] = 2;
+}
+recorrerMatriz();
+//funcion para dibujar el tablero en el HTML
+function dibujarTablero() {
+    let tableroHTML = '';
+    for (let i = 0; i < matriz.length; i++) {
+        tableroHTML += '<div class="fila">';
+        for (let j = 0; j < matriz[i].length; j++) {
+            if (matriz[i][j] === 0) {
+                tableroHTML += '<div class="celda"></div>';
+            } else if (matriz[i][j] === 1) {
+                tableroHTML += '<div class="celda enemigo">1</div>';
+            } else if (matriz[i][j] === 2) {
+                tableroHTML += '<div class="celda jugador">2</div>';
+            }
+        }
+        tableroHTML += '</div>';
+    }
     div.innerHTML += tableroHTML;
 }
 
